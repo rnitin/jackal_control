@@ -8,43 +8,42 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '.')))
 import rospy
 import numpy as np
-import pickle
 from jackal_agent import JackalAgent
 
 class WaypointNav(JackalAgent):
     def __init__(self):
         """ initialize WaypointNav object """
-        super(WaypointNav, self).__init__(logging=True)
-
+        super(WaypointNav, self).__init__()
+   
     def go_to_wayp(self):
         """ navigate Jackal through waypoints """
         mode = int(input("Mode (1 - both, 2 - head first): "))
-        n_wayp = 5
-        wayp = np.array([[0.,0.],[1.,0.],[1.,1.],[0.,1.],[0.,0.]])
-        self.tol= 0.005
+        n_wayp = int(input("Input number of waypoints: "))
+        wayp = np.zeros((n_wayp, 2))
+        x_str = input("x coordinates of waypoints (separated by ','): ")
+        wayp[:,0] = np.array(list(map(float, x_str.split(','))))
+        y_str = input("y coordinates of waypoints (separated by ','): ")
+        wayp[:,1] = np.array(list(map(float, y_str.split(','))))
+        self.tol = round(float(input("Tolerance: ")), 3)
 
         for i_wayp in range(n_wayp):
             goal_x = round(wayp[i_wayp,0], 3)
             goal_y = round(wayp[i_wayp,1], 3)
             self.set_goal(goal_x, goal_y)
             self.nav_goal(mode)
-            print("Waypoint ", i_wayp+1, " reached.")
+            print("Waypoint ", i_wayp+1, " reached.")    
+            self.turn(2*np.pi)
 
         if (i_wayp == n_wayp - 1):
             print("All waypoints navigated.")
             self.stop_bot()
             self.orient_bot()
-            log_path = os.path.join(os.getcwd(), 'src/jackal_control/logs/')
-            with open(log_path + 'list_er_lin.pkl', 'wb') as f:
-                pickle.dump(self.list_e_lin, f)
-            with open(log_path + 'list_er_ang.pkl', 'wb') as f:
-                pickle.dump(self.list_e_ang, f)
         else:
             print("Error. ", i_wayp + 1, " waypoints navigated.")
 
 if __name__ == '__main__':
     try:
-        rospy.init_node("jackal_wayp_test", anonymous=True)
+        rospy.init_node("jackal_wayp", anonymous=True)
         agent = WaypointNav()
         agent.go_to_wayp()
     except rospy.ROSInterruptException:

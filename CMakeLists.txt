@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0.2)
 project(jackal_control)
 
 ## Find catkin macros and libraries
-find_package(catkin REQUIRED COMPONENTS rospy geometry_msgs nav_msgs)
+find_package(catkin REQUIRED COMPONENTS rospy geometry_msgs nav_msgs tf2 tf2_ros)
 
 ###################################
 ## catkin specific configuration ##
