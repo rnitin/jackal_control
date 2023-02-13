@@ -64,7 +64,7 @@ class RobotAgent:
             goal_pose.x - self.pose.x) - self.pose.theta
         return wrap_angle(e_ang)
     
-    def clip_vel(self, v_lin, v_ang, thresh=0.95):
+    def clip_vel(self, v_lin, v_ang, thresh=1.0):
         """ clip velocity commands sent to the bot"""
         max_lin = thresh * self.MAX_V_LIN
         max_ang = thresh * self.MAX_V_ANG

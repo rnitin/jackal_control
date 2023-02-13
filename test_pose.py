@@ -25,6 +25,7 @@ if __name__ == '__main__':
         rospy.init_node("jackal_goal", anonymous=True)
         rate = rospy.Rate(10)
         agent = TestPose()
+        agent.turn(math.pi)
         while not rospy.is_shutdown():
             agent.test_pose()
             rate.sleep()
