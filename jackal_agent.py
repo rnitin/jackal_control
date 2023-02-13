@@ -9,16 +9,16 @@ import math
 from utils import RobotAgent, PID
 from utils import wrap_angle
 
-RATE = 10
-MAX_V_LIN = 0.5
-MAX_V_ANG = 1.0
-THRESH_LIN = 0.05
+RATE = 50
+MAX_V_LIN = 0.3
+MAX_V_ANG = 0.5
+THRESH_LIN = 0.1
 THRESH_ANG = 0.1
 
 class JackalAgent(RobotAgent):
     """ class representing a Jackal Robot """
     
-    def __init__(self, k=np.array([[1.0, 0., 0.],[1.5, 1.0, 0.]]), \
+    def __init__(self, k=np.array([[0.6, 0., 0.],[0.7, 2.0, 0.]]), \
     logging=False):
         """ initialize JackalAgent object """
         self.wait_sub = True # flag to wait for subscriber init
@@ -207,7 +207,7 @@ class JackalAgent(RobotAgent):
         and not rospy.is_shutdown():
             v_msg = Twist()
             v_msg.linear.x = 0.
-            v_msg.angular.z = self.MAX_V_ANG / 2
+            v_msg.angular.z = self.MAX_V_ANG
             self.pub.publish(v_msg)
             self.rate.sleep()
 
@@ -219,4 +219,7 @@ class JackalAgent(RobotAgent):
             else:
                 a_rot += a_new - a_old
             a_old = a_new
+            print("cur_angle: {}, tot_turn: {}".format(
+                math.degrees(a_new), math.degrees(a_rot)
+            ))
         self.stop_bot() 
